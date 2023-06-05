@@ -22,10 +22,18 @@ router.post("/register", async (req, res) => {
         await NewUser.save();
 
         //Sending response to frontend
-        res.send({ message: "User created successfully", success: true });
+        return res.send({
+            message: "User created successfully",
+            success: true,
+        });
     } catch (error) {
         res.send({ message: error.message, success: false });
     }
+});
+
+router.get("/prueba", (req, res) => {
+    console.log("Solicitud recibida");
+    return res.end("Hello world").json();
 });
 
 router.post("/login", async (req, res) => {
@@ -39,8 +47,8 @@ router.post("/login", async (req, res) => {
             });
         }
 
-        //Checking the passarowds
-
+        //Checking the passwords
+        //Here, the bycrypt.compare() is comparing the uncrypted password in the req.body with the encrypted password saved in the database, it seems it is not neccessary to uncrypt it in order to check if the password is correct
         const validPassword = await bcrypt.compare(
             req.body.password,
             user.password
@@ -49,6 +57,7 @@ router.post("/login", async (req, res) => {
             return res.send({ message: "Invalid password", success: false });
         }
 
+        //First parameter is the one we will assign as token, second parameter is the secret token: jwt.sign(token, secret_token)
         const token = jwt.sign({ userId: user._id }, process.env.JWT_TOKEN);
         res.send({
             message: "User logged succesfully",

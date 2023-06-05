@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { RegisterUser } from "../../apicalls/users";
 
 function Register() {
     const [user, setUser] = useState({
@@ -9,7 +10,17 @@ function Register() {
     });
 
     const registerUser = async () => {
-        console.log(user);
+        try {
+            const response = await RegisterUser(user);
+
+            if (response.success) {
+                alert(response.message);
+            } else {
+                alert(response.message);
+            }
+        } catch (error) {
+            alert(error.message);
+        }
     };
 
     return (
