@@ -1,41 +1,49 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { GetCurrentUser } from "../apicalls/users";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
-const ProtectedRoute = ({ children }) => {
-    const navigate = useNavigate();
-    const getCurrentUser = async () => {
-        const response = await GetCurrentUser();
-        try {
-            if (response.success) {
-                //children.props.username = response.Data.email;
-                return true;
-            } else {
-                if (!toast.isActive(toast.toastId)) {
-                    toast.error(
-                        response.message.charAt(0).toUpperCase() +
-                            response.message.slice(1),
-                        {
-                            position: toast.POSITION.TOP_CENTER,
-                            toastId: "TokenError",
-                            delay: 0,
-                        }
-                    );
-                }
-                navigate("/login");
-                return false;
+export const getCurrentUser = async () => {
+    const response = await GetCurrentUser();
+
+    try {
+        if (response.success) {
+            setUser(response.Data);
+        } else {
+            if (!toast.isActive(toast.toastId)) {
+                toast.error(
+                    response.message.charAt(0).toUpperCase() +
+                        response.message.slice(1),
+                    {
+                        position: toast.POSITION.TOP_CENTER,
+                        toastId: "TokenError",
+                        delay: 0,
+                    }
+                );
             }
-        } catch (error) {
             navigate("/login");
         }
-    };
+    } catch (error) {
+        navigate("/login");
+    }
+};
+
+const ProtectedRoute = ({ children }) => {
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+
     useEffect(() => {
         if (localStorage.getItem("token")) {
             getCurrentUser();
         }
     }, []);
-    return <div>{children}</div>;
+    return (
+        <div>
+            <h1>{user?.name}</h1>
+            <h1>{user?.email}</h1>
+            {children}
+        </div>
+    );
 };
 
 export default ProtectedRoute;
