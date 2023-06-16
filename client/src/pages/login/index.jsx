@@ -1,6 +1,8 @@
 import { useState } from "react";
 import React from "react";
 import { Link } from "react-router-dom";
+import { LoginUser } from "../../apicalls/users";
+import { toast, ToastContainer } from "react-toastify";
 
 function Login() {
     const [user, setUser] = useState({
@@ -9,7 +11,33 @@ function Login() {
     });
 
     const loginUser = async () => {
-        console.log(user);
+        try {
+            const response = await LoginUser(user);
+            if (response.success) {
+                toast.success(response.message, {
+                    position: toast.POSITION.TOP_CENTER,
+                    delay: 0,
+                });
+                localStorage.setItem("token", response.Data);
+                window.location.href = "/";
+            } else {
+                if (!toast.isActive(toast.toastId)) {
+                    toast.error(response.message, {
+                        position: toast.POSITION.TOP_CENTER,
+                        toastId: "IncorrectPassword",
+                        delay: 0,
+                    });
+                }
+            }
+        } catch (error) {
+            if (!toast.isActive(toast.toastId)) {
+                toast.error(response.message, {
+                    position: toast.POSITION.TOP_CENTER,
+                    toastId: "ErrorNotification",
+                    delay: 0,
+                });
+            }
+        }
     };
 
     return (
@@ -46,6 +74,8 @@ function Login() {
                 >
                     Log In
                 </button>
+                <ToastContainer />
+
                 <Link to="/register" className="hover:text-secondary">
                     Already have an account? Sign up
                 </Link>

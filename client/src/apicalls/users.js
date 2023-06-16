@@ -1,9 +1,9 @@
 import { AxiosInstance } from ".";
 
-const url = "http://localhost:5173/api/users/register";
 export const LoginUser = async (user) => {
+    const urlLogin = "http://localhost:3000/api/users/login";
     try {
-        const response = await AxiosInstance.post("/api/users/login", user);
+        const response = await AxiosInstance.post(urlLogin, user);
         return response.data;
     } catch (error) {
         return error.response.data;
@@ -11,8 +11,20 @@ export const LoginUser = async (user) => {
 };
 
 export const RegisterUser = async (user) => {
+    const urlRegister = "http://localhost:3000/api/users/register";
     try {
-        const response = await AxiosInstance.post(url, user);
+        const response = await AxiosInstance.post(urlRegister, user);
+        return response.data;
+    } catch (error) {
+        return error.response.data;
+    }
+};
+
+export const GetCurrentUser = async () => {
+    const urlGetCurrentUser =
+        "http://localhost:3000/api/users/get-current-user";
+    try {
+        const response = await AxiosInstance.get(urlGetCurrentUser);
         return response.data;
     } catch (error) {
         return error.response.data;

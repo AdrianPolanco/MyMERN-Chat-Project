@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { RegisterUser } from "../../apicalls/users";
+import { toast, ToastContainer } from "react-toastify";
 
 function Register() {
     const [user, setUser] = useState({
@@ -14,12 +15,18 @@ function Register() {
             const response = await RegisterUser(user);
 
             if (response.success) {
-                alert(response.message);
+                toast.success(response.message);
             } else {
-                alert(response.message);
+                if (!toast.isActive(toast.toastId)) {
+                    toast.error(response.message, {
+                        position: toast.POSITION.TOP_CENTER,
+                        toastId: "IncorrectPassword",
+                        delay: 0,
+                    });
+                }
             }
         } catch (error) {
-            alert(error.message);
+            toast.error(error.message);
         }
     };
 
@@ -63,6 +70,7 @@ function Register() {
                 >
                     Register
                 </button>
+                <ToastContainer />
                 <Link to="/login" className="hover:text-primary">
                     Already have an account? Log In
                 </Link>
