@@ -24,9 +24,13 @@ export const GetCurrentUser = async () => {
     const urlGetCurrentUser =
         "http://localhost:3000/api/users/get-current-user";
     try {
-        const response = await AxiosInstance.get(urlGetCurrentUser);
+        const response = await AxiosInstance.get(urlGetCurrentUser, {
+            email: "ad1@gmail.com",
+            password: "1234",
+        });
+        console.log(response.data);
         return response.data;
     } catch (error) {
-        return error.response.data;
+        return error.response.Data;
     }
 };

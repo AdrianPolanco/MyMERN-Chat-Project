@@ -8,6 +8,7 @@ const ProtectedRoute = ({ children }) => {
         const response = await GetCurrentUser();
         try {
             if (response.success) {
+                //children.props.username = response.Data.email;
                 return true;
             } else {
                 navigate("/login");
