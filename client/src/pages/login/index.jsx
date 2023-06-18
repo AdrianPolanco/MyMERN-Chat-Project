@@ -3,6 +3,8 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginUser } from "../../apicalls/users";
 import { toast, ToastContainer } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { HideLoader, ShowLoader } from "../../redux/loaderSlice";
 
 function Login() {
     const [user, setUser] = useState({
@@ -11,6 +13,7 @@ function Login() {
     });
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     useEffect(() => {
         if (localStorage.getItem("token")) {
             navigate("/");
@@ -19,7 +22,9 @@ function Login() {
 
     const loginUser = async () => {
         try {
+            dispatch(ShowLoader());
             const response = await LoginUser(user);
+            dispatch(HideLoader());
             if (response.success) {
                 toast.success(response.message, {
                     position: toast.POSITION.TOP_CENTER,
@@ -84,7 +89,7 @@ function Login() {
                 <ToastContainer />
 
                 <Link to="/register" className="hover:text-secondary">
-                    Already have an account? Sign up
+                    Do not have an account? Sign up
                 </Link>
             </div>
         </div>

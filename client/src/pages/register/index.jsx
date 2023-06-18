@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { RegisterUser } from "../../apicalls/users";
 import { toast, ToastContainer } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { HideLoader, ShowLoader } from "../../redux/loaderSlice";
 
 function Register() {
     const [user, setUser] = useState({
@@ -11,6 +13,7 @@ function Register() {
     });
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
@@ -20,8 +23,9 @@ function Register() {
 
     const registerUser = async () => {
         try {
+            dispatch(ShowLoader());
             const response = await RegisterUser(user);
-
+            dispatch(HideLoader());
             if (response.success) {
                 toast.success(response.message);
             } else {

@@ -7,12 +7,15 @@ import Toaster from "react-hot-toast";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Loader from "./components/loader";
+import { useSelector } from "react-redux";
 
 function App() {
-    //
+    const { loader } = useSelector((state) => state.loaderReducer);
     return (
         <div>
             <ToastContainer></ToastContainer>
+            {loader && <Loader />}
             <BrowserRouter>
                 <Routes>
                     <Route
