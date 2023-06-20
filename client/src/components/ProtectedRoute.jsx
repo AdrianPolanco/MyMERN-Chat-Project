@@ -2,17 +2,21 @@ import React, { useEffect, useState } from "react";
 import { GetCurrentUser } from "../apicalls/users";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { ShowLoader, HideLoader } from "../redux/loaderSlice";
+import userSlice, { SetUser } from "../redux/userSlice";
 
 const ProtectedRoute = ({ children }) => {
     const navigate = useNavigate();
-    const [user, setUser] = useState(null);
-
+    const { user } = useSelector((state) => state.userReducer);
+    const dispatch = useDispatch();
     const getCurrentUser = async () => {
-        const response = await GetCurrentUser();
-
         try {
+            dispatch(ShowLoader());
+            const response = await GetCurrentUser();
+            dispatch(HideLoader());
             if (response.success) {
-                setUser(response.Data);
+                dispatch(SetUser(response.Data));
             } else {
                 if (!toast.isActive(toast.toastId)) {
                     toast.error(
