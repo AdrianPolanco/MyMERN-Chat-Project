@@ -28,7 +28,16 @@ export const GetCurrentUser = async () => {
             email: "ad1@gmail.com",
             password: "1234",
         });
-        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        return error.response.Data;
+    }
+};
+
+export const GetAllUsers = async () => {
+    const urlGetAllUsers = "http://localhost:3000/api/users/get-all-users";
+    try {
+        const response = await AxiosInstance.get(urlGetAllUsers);
         return response.data;
     } catch (error) {
         return error.response.Data;
