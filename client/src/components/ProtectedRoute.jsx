@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { GetAllUsers, GetCurrentUser } from "../apicalls/users";
+import { GetAllChats } from "../apicalls/chat";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { ShowLoader, HideLoader } from "../redux/loaderSlice";
-import userSlice, { SetUser, SetAllUsers } from "../redux/userSlice";
+import userSlice, { SetUser, SetAllUsers, SetAllChats } from "../redux/userSlice";
 import gradiente from "../stylesheets/gradiente.css?inline";
 
 const ProtectedRoute = ({ children }) => {
@@ -16,10 +17,12 @@ const ProtectedRoute = ({ children }) => {
             dispatch(ShowLoader());
             const response = await GetCurrentUser();
             const allUsersResponse = await GetAllUsers();
+            const allChatsResponse = await GetAllChats();
             dispatch(HideLoader());
             if (response.success) {
                 dispatch(SetUser(response.Data));
                 dispatch(SetAllUsers(allUsersResponse.data));
+                dispatch(SetAllChats(allChatsResponse.data))
             } else {
                 if (!toast.isActive(toast.toastId)) {
                     toast.error(
